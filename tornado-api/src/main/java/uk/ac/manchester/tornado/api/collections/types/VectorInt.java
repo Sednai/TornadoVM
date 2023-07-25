@@ -2,7 +2,7 @@
  * This file is part of Tornado: A heterogeneous programming framework: 
  * https://github.com/beehive-lab/tornadovm
  *
- * Copyright (c) 2013-2020, APT Group, Department of Computer Science,
+ * Copyright (c) 2013-2022, APT Group, Department of Computer Science,
  * The University of Manchester. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -50,7 +50,7 @@ public class VectorInt implements PrimitiveStorage<IntBuffer> {
 
     private final int numElements;
     private final int[] storage;
-    private static final int elementSize = 1;
+    private static final int ELEMENT_SIZE = 1;
 
     /**
      * Creates a vector using the provided backing array
@@ -82,7 +82,7 @@ public class VectorInt implements PrimitiveStorage<IntBuffer> {
      *            vector int array
      */
     public VectorInt(int[] storage) {
-        this(storage.length / elementSize, storage);
+        this(storage.length / ELEMENT_SIZE, storage);
     }
 
     public int[] getArray() {
@@ -223,7 +223,7 @@ public class VectorInt implements PrimitiveStorage<IntBuffer> {
      * @return String
      */
     public String toString(String fmt) {
-        StringBuffer sb = new StringBuffer("[");
+        StringBuilder sb = new StringBuilder("[");
         sb.append("[ ");
         for (int i = 0; i < numElements; i++) {
             sb.append(String.format(fmt, get(i)) + " ");
@@ -235,7 +235,7 @@ public class VectorInt implements PrimitiveStorage<IntBuffer> {
     public String toString() {
         String str = String.format("VectorInt <%d>", numElements);
         if (numElements < 32) {
-            str += toString(IntOps.fmt);
+            str += toString(IntOps.FMT);
         }
         return str;
     }
@@ -252,6 +252,10 @@ public class VectorInt implements PrimitiveStorage<IntBuffer> {
 
     @Override
     public int size() {
+        return numElements;
+    }
+
+    public int getLength() {
         return numElements;
     }
 }

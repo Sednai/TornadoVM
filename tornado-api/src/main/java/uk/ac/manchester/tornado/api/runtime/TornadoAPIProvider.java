@@ -1,8 +1,8 @@
 /*
- * This file is part of Tornado: A heterogeneous programming framework: 
+ * This file is part of Tornado: A heterogeneous programming framework:
  * https://github.com/beehive-lab/tornadovm
  *
- * Copyright (c) 2020, APT Group, Department of Computer Science,
+ * Copyright (c) 2020-2022, APT Group, Department of Computer Science,
  * School of Engineering, The University of Manchester. All rights reserved.
  * Copyright (c) 2013-2020, APT Group, Department of Computer Science,
  * The University of Manchester. All rights reserved.
@@ -12,12 +12,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * GNU Classpath is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Classpath; see the file COPYING.  If not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
@@ -27,7 +27,7 @@
  * making a combined work based on this library.  Thus, the terms and
  * conditions of the GNU General Public License cover the whole
  * combination.
- * 
+ *
  * As a special exception, the copyright holders of this library give you
  * permission to link this library with independent modules to produce an
  * executable, regardless of the license terms of these independent
@@ -48,48 +48,48 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import uk.ac.manchester.tornado.api.AbstractFactoryDevice;
-import uk.ac.manchester.tornado.api.AbstractTaskGraph;
 import uk.ac.manchester.tornado.api.TornadoCI;
-import uk.ac.manchester.tornado.api.TornadoDriver;
-import uk.ac.manchester.tornado.api.TornadoRuntimeCI;
+import uk.ac.manchester.tornado.api.TornadoRuntimeInterface;
+import uk.ac.manchester.tornado.api.TornadoTaskGraphInterface;
+import uk.ac.manchester.tornado.api.exceptions.TornadoAPIException;
 
 public class TornadoAPIProvider {
 
-    public static AbstractTaskGraph loadScheduleRuntime(String name) {
-        AbstractTaskGraph taskGraphImpl = null;
+    public static TornadoTaskGraphInterface loadScheduleRuntime(String name) {
+        TornadoTaskGraphInterface taskGraphImpl;
         try {
             String tornadoAPIImplementation = System.getProperty("tornado.load.api.implementation");
             Class<?> klass = Class.forName(tornadoAPIImplementation);
             Constructor<?> constructor = klass.getConstructor(String.class);
-            taskGraphImpl = (AbstractTaskGraph) constructor.newInstance(name);
+            taskGraphImpl = (TornadoTaskGraphInterface) constructor.newInstance(name);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
-            throw new RuntimeException("[ERROR] Tornado API Implementation class not found", e);
+            throw new TornadoAPIException("[ERROR] Tornado API Implementation class not found", e);
         }
         return taskGraphImpl;
     }
 
-    public static TornadoRuntimeCI loadRuntime() {
-        TornadoRuntimeCI runtime = null;
+    public static TornadoRuntimeInterface loadRuntime() {
+        TornadoRuntimeInterface runtime;
         try {
             String tornadoRuntimeImplementation = System.getProperty("tornado.load.runtime.implementation");
             Class<?> klass = Class.forName(tornadoRuntimeImplementation);
             Method method = klass.getDeclaredMethod("getTornadoRuntime");
-            runtime = (TornadoRuntimeCI) method.invoke(null);
+            runtime = (TornadoRuntimeInterface) method.invoke(null);
         } catch (ClassNotFoundException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
-            throw new RuntimeException("[ERROR] Tornado Runtime Implementation class not found");
+            throw new TornadoAPIException("[ERROR] Tornado Runtime Implementation class not found", e);
         }
         return runtime;
     }
 
     public static TornadoCI loadTornado() {
-        TornadoCI tornado = null;
+        TornadoCI tornado;
         try {
             String tornadoImplementation = System.getProperty("tornado.load.tornado.implementation");
             Class<?> klass = Class.forName(tornadoImplementation);
             Constructor<?> constructor = klass.getConstructor();
             tornado = (TornadoCI) constructor.newInstance();
         } catch (ClassNotFoundException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
-            throw new RuntimeException("[ERROR] Tornado Implementation class not found");
+            throw new TornadoAPIException("[ERROR] Tornado Implementation class not found", e);
         }
         return tornado;
     }
@@ -103,7 +103,7 @@ public class TornadoAPIProvider {
             Constructor<?> constructor = klass.getConstructor();
             device = (AbstractFactoryDevice) constructor.newInstance();
         } catch (ClassNotFoundException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
-            throw new RuntimeException("[ERROR] Tornado Device Implementation class not found");
+            throw new TornadoAPIException("[ERROR] Tornado Device Implementation class not found", e);
         }
         return device;
     }

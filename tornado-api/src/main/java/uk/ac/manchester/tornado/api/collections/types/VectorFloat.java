@@ -2,7 +2,7 @@
  * This file is part of Tornado: A heterogeneous programming framework: 
  * https://github.com/beehive-lab/tornadovm
  *
- * Copyright (c) 2013-2020, APT Group, Department of Computer Science,
+ * Copyright (c) 2013-2022, APT Group, Department of Computer Science,
  * The University of Manchester. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -50,7 +50,7 @@ public class VectorFloat implements PrimitiveStorage<FloatBuffer> {
 
     private final int numElements;
     private final float[] storage;
-    private static final int elementSize = 1;
+    private static final int ELEMENT_SIZE = 1;
 
     protected VectorFloat(int numElements, float[] array) {
         this.numElements = numElements;
@@ -74,7 +74,7 @@ public class VectorFloat implements PrimitiveStorage<FloatBuffer> {
      *            Array to be stored
      */
     public VectorFloat(float[] storage) {
-        this(storage.length / elementSize, storage);
+        this(storage.length / ELEMENT_SIZE, storage);
     }
 
     public float[] getArray() {
@@ -214,7 +214,7 @@ public class VectorFloat implements PrimitiveStorage<FloatBuffer> {
      * @return String
      */
     public String toString(String fmt) {
-        StringBuffer sb = new StringBuffer("[");
+        StringBuilder sb = new StringBuilder("[");
         sb.append("[ ");
         for (int i = 0; i < numElements; i++) {
             sb.append(String.format(fmt, get(i)) + " ");
@@ -243,6 +243,10 @@ public class VectorFloat implements PrimitiveStorage<FloatBuffer> {
 
     @Override
     public int size() {
+        return numElements;
+    }
+
+    public int getLength() {
         return numElements;
     }
 }

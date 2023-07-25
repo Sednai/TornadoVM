@@ -2,7 +2,7 @@
  * This file is part of Tornado: A heterogeneous programming framework:
  * https://github.com/beehive-lab/tornadovm
  *
- * Copyright (c) 2020, APT Group, Department of Computer Science,
+ * Copyright (c) 2020, 2022, APT Group, Department of Computer Science,
  * The University of Manchester. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -48,7 +48,7 @@ public abstract class AbstractWorkerGrid implements WorkerGrid {
     protected long[] numOfWorkgroups;
     protected long[] globalOffset;
 
-    public AbstractWorkerGrid(long x, long y, long z) {
+    protected AbstractWorkerGrid(long x, long y, long z) {
         globalWork = new long[] { x, y, z };
         globalOffset = new long[] { 0, 0, 0 };
     }
